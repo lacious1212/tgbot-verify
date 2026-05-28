@@ -1,114 +1,64 @@
-"""随机名字生成器"""
 import random
 
-
 class NameGenerator:
-    """英文名字生成器"""
+    """英文名字生成器 - 已修改為固定真實名字格式防止風控"""
     
+    # 這裡保留原本的結構，避免其他調用此類別的檔案報錯
     ROOTS = {
-        'prefixes': ['Al', 'Bri', 'Car', 'Dan', 'El', 'Fer', 'Gar', 'Har', 'Jes', 'Kar', 
-                    'Lar', 'Mar', 'Nor', 'Par', 'Quin', 'Ros', 'Sar', 'Tar', 'Val', 'Wil'],
-        'middles': ['an', 'en', 'in', 'on', 'ar', 'er', 'or', 'ur', 'al', 'el', 
-                   'il', 'ol', 'am', 'em', 'im', 'om', 'ay', 'ey', 'oy', 'ian'],
-        'suffixes': ['ton', 'son', 'man', 'ley', 'field', 'ford', 'wood', 'stone', 'worth', 'berg',
-                    'stein', 'bach', 'heim', 'gard', 'land', 'wick', 'shire', 'dale', 'brook', 'ridge'],
-        'name_roots': ['Alex', 'Bern', 'Crist', 'Dav', 'Edw', 'Fred', 'Greg', 'Henr', 'Ivan', 'John',
-                      'Ken', 'Leon', 'Mich', 'Nick', 'Oliv', 'Paul', 'Rich', 'Step', 'Thom', 'Will'],
-        'name_endings': ['a', 'e', 'i', 'o', 'y', 'ie', 'ey', 'an', 'en', 'in', 
-                        'on', 'er', 'ar', 'or', 'el', 'al', 'iel', 'ael', 'ine', 'lyn']
+        'prefixes': ['David', 'James', 'John', 'Robert', 'Michael', 'William'],
+        'middles': [''],
+        'suffixes': ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones'],
+        'name_roots': ['David'],
+        'name_endings': ['']
     }
     
     PATTERNS = {
-        'first_name': [
-            ['prefix', 'ending'],
-            ['name_root', 'ending'],
-            ['prefix', 'middle', 'ending'],
-            ['name_root', 'middle', 'ending']
-        ],
-        'last_name': [
-            ['prefix', 'suffix'],
-            ['name_root', 'suffix'],
-            ['prefix', 'middle', 'suffix'],
-            ['compound']
-        ]
+        'first_name': [['name_root']],
+        'last_name': [['suffix']]
     }
     
     @classmethod
     def _generate_component(cls, pattern):
-        """根据模式生成名字组件"""
-        components = []
-        for part in pattern:
-            if part == 'prefix':
-                component = random.choice(cls.ROOTS['prefixes'])
-            elif part == 'middle':
-                component = random.choice(cls.ROOTS['middles'])
-            elif part == 'suffix':
-                component = random.choice(cls.ROOTS['suffixes'])
-            elif part == 'name_root':
-                component = random.choice(cls.ROOTS['name_roots'])
-            elif part == 'ending':
-                component = random.choice(cls.ROOTS['name_endings'])
-            elif part == 'compound':
-                part1 = random.choice(cls.ROOTS['prefixes'])
-                part2 = random.choice(cls.ROOTS['suffixes'])
-                component = part1 + part2
-            else:
-                component = ''
-            
-            components.append(component)
-        
-        return ''.join(components)
-    
+        return "David"
+
     @classmethod
     def _format_name(cls, name):
-        """格式化名字（首字母大写）"""
         return name.capitalize()
     
     @classmethod
     def generate(cls):
         """
-        生成随机英文名字
-        
-        Returns:
-            dict: 包含 first_name, last_name, full_name
+        生成常用真實人名，避免被 SheerID 判定為隨機字根組合的機器人
         """
-        first_name_pattern = random.choice(cls.PATTERNS['first_name'])
-        last_name_pattern = random.choice(cls.PATTERNS['last_name'])
+        # 隨機挑選常見的真實英文名與姓氏
+        first_names = ['David', 'James', 'John', 'Robert', 'Michael', 'William', 'Charles', 'Matthew', 'Mark', 'Steven']
+        last_names = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Wilson']
         
-        first_name = cls._generate_component(first_name_pattern)
-        last_name = cls._generate_component(last_name_pattern)
+        f_name = random.choice(first_names)
+        l_name = random.choice(last_names)
         
         return {
-            'first_name': cls._format_name(first_name),
-            'last_name': cls._format_name(last_name),
-            'full_name': f"{cls._format_name(first_name)} {cls._format_name(last_name)}"
+            'first_name': f_name,
+            'last_name': l_name,
+            'full_name': f"{f_name} {l_name}"
         }
 
 
 def generate_email(school_domain='MIT.EDU'):
     """
-    生成随机学校邮箱
-    
-    Args:
-        school_domain: 学校域名
-    
-    Returns:
-        str: 邮箱地址
+    這裡已經不重要，因為我們核心要切換成不需要信箱驗證的學校。
+    但維持格式，避免其他檔案崩潰。
     """
-    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    username = ''.join(random.choice(chars) for _ in range(8))
+    chars = 'abcdefghijklmnopqrstuvwxyz'
+    username = ''.join(random.choice(chars) for _ in range(6))
     return f"{username}@{school_domain}"
 
 
 def generate_birth_date():
     """
-    生成随机生日（2000-2005年）
-    
-    Returns:
-        str: YYYY-MM-DD 格式的日期
+    生成隨機生日
     """
-    year = 2000 + random.randint(0, 5)
+    year = random.randint(2000, 2004)
     month = str(random.randint(1, 12)).zfill(2)
     day = str(random.randint(1, 28)).zfill(2)
     return f"{year}-{month}-{day}"
-
