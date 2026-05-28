@@ -1,7 +1,7 @@
 # SheerID 验证配置文件
 
 # SheerID API 配置
-PROGRAM_ID = '6a058e93663bac1f9001356b'
+PROGRAM_ID = '69e8a0d18415475fbfbf5157'
 SHEERID_BASE_URL = 'https://services.sheerid.com'
 MY_SHEERID_URL = 'https://my.sheerid.com'
 
